@@ -17,8 +17,12 @@ dotenv.config();
 connectDB();
 
 const app = express();
-
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.use("/api/messages", messageRoutes);
@@ -33,8 +37,8 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin:
-      "http://localhost:5173",
+    origin: process.env.CLIENT_URL,
+    credentials: true,
   },
 });
 
@@ -42,6 +46,8 @@ io.use(socketAuth);
 
 chatSocket(io);
 
-server.listen(3000, () => {
-  console.log("Server running");
+const PORT = process.env.PORT || 3000;
+
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
