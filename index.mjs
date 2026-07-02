@@ -17,13 +17,22 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true,
-  })
-);
+
+// const allowedOrigins = [
+//   "http://localhost:5173",
+//   process.env.CLIENT_URL,
+// ];
+
+app.use(cors({
+  origin: true,
+  credentials: true,
+}));
+
 app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("<h1>Backend Live 🚀</h1>");
+});
 
 app.use("/api/messages", messageRoutes);
 
@@ -37,7 +46,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL,
+    origin: true,
     credentials: true,
   },
 });
